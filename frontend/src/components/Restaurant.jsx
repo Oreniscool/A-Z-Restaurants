@@ -2,9 +2,17 @@
 import { Card, CardHeader, CardBody, Image } from '@nextui-org/react';
 import restaurant from '/background/restaurant.jpg';
 import { Beer, Cake, Star, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 const Restaurant = ({ dinner }) => {
+  const navigate = useNavigate();
   return (
-    <Card className="py-4 min-w-[14%]" isHoverable shadow="md">
+    <Card
+      className="py-4 min-w-[14%]"
+      isHoverable
+      isPressable
+      shadow="md"
+      onClick={() => navigate(`/restaurant/${dinner.r_id}`)}
+    >
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <Image
           alt="Card background"

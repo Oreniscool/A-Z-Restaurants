@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useLocation,
-  Link,
-} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Landing from './pages/Landing';
 import SignUp from './pages/Signup';
 import Login from './pages/Login';
@@ -14,6 +8,7 @@ import Search from './components/Search';
 import Bookings from './components/Bookings';
 import Help from './components/Help';
 import Settings from './components/Settings';
+import RestaurantPage from './components/RestaurantPage';
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +23,10 @@ function App() {
           <Route path="bookings" element={<Bookings></Bookings>}></Route>
           <Route path=" help" element={<Help></Help>}></Route>
           <Route path="settings" element={<Settings></Settings>}></Route>
+          <Route
+            path="restaurant/:id"
+            element={<RestaurantPage></RestaurantPage>}
+          ></Route>
         </Route>
         <Route
           path="*"
