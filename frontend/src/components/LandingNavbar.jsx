@@ -1,11 +1,14 @@
-import { Button, Link } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
+import { Link } from 'react-router-dom';
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
 } from '@nextui-org/navbar';
+import { useNavigate } from 'react-router-dom';
 function LandingNavbar() {
+  const navigate = useNavigate();
   return (
     <Navbar className="text-white">
       <NavbarBrand>
@@ -13,20 +16,18 @@ function LandingNavbar() {
       </NavbarBrand>
       <NavbarContent>
         <NavbarItem>
-          <Link href="/landing">Home</Link>
+          <Link to="/landing">Home</Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/about">About Us</Link>
+          <Link to="/about">About Us</Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/support">Support</Link>
+          <Link to="/support">Support</Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/login">
-            <Button auto flat>
-              Booking
-            </Button>
-          </Link>
+          <Button flat onClick={() => navigate('/login')}>
+            Booking
+          </Button>
         </NavbarItem>
       </NavbarContent>
     </Navbar>

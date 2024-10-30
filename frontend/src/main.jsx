@@ -8,7 +8,7 @@ import './index.css';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <NextUIProvider>
-      <main className="dark">
+      <main className="">
         <App />
       </main>
     </NextUIProvider>

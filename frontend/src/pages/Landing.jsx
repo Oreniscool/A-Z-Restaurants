@@ -1,4 +1,5 @@
-import { Button, Link } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
+import { Link } from 'react-router-dom';
 import LandingNavbar from '../components/LandingNavbar';
 const Landing = () => {
   return (
@@ -12,14 +13,14 @@ const Landing = () => {
           For Your Dinning
         </h1>
         <div className="flex space-x-4 text-white">
-          <Link href="/signup">
+          <Link to="/signup">
             <Button auto size="lg">
-              <span className="text-accent-500">Sign Up</span>
+              <span className="text-accent-500 font-bold">Sign Up</span>
             </Button>
           </Link>
-          <Link href="#">
-            <Button auto light variant="flat" color="default" size="lg">
-              <span className="text-accent-900">Login</span>
+          <Link to="/login">
+            <Button auto light variant="ghost" color="default" size="lg">
+              <span className="text-accent-800 font-bold">Login</span>
             </Button>
           </Link>
         </div>

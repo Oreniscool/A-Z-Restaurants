@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Input, Button, Checkbox, Link } from '@nextui-org/react';
+import { useState } from 'react';
+import { Input, Button, Checkbox } from '@nextui-org/react';
 import { Eye, EyeOff } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const SignUpPage = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -18,7 +19,7 @@ const SignUpPage = () => {
               AZ Restaurants
             </span>
           </div>
-          <Link href="#" className="absolute top-4 right-4 text-white">
+          <Link to="/landing" className="absolute top-4 right-4 text-white">
             Back to website →
           </Link>
           <div className="h-full flex flex-col justify-end">
@@ -42,7 +43,7 @@ const SignUpPage = () => {
           </h1>
           <p className="text-gray-400 mb-8">
             Already have an account?{' '}
-            <Link href="/login" className="text-accent-500">
+            <Link to="/login" className="text-accent-500">
               Log in
             </Link>
           </p>
