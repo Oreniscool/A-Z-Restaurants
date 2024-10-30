@@ -2,12 +2,47 @@ import { useState } from 'react';
 import { Input, Button, Checkbox } from '@nextui-org/react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [usernameErr, setUsernameErr] = useState(false);
+  const [passwordErr, setPasswordErr] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const login = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      console.log(username, password);
+      const response = await axios.post(
+        'http://localhost:5000/login',
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
+      );
+      setLoading(false);
+      if (response.status == 200) {
+        navigate('/dashboard/home');
+      }
+    } catch (e) {
+      setLoading(false);
+      if (e.status == 400) {
+        setUsernameErr(true);
+      } else if (e.status == 401) {
+        setPasswordErr(true);
+      }
+      console.error(e);
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="h-screen bg-gray-900 flex items-center justify-center p-10 px-24">
@@ -48,17 +83,33 @@ const LoginPage = () => {
             </Link>
           </p>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={login}>
             <Input
-              type="email"
-              label="Email"
-              placeholder="Enter your email"
+              type="text"
+              isRequired
+              required
+              label="Username"
+              placeholder="Enter your username"
+              isInvalid={usernameErr}
+              errorMessage="Please enter a valid username"
               className="w-full"
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setUsernameErr(false);
+              }}
             />
 
             <Input
               label="Password"
               placeholder="Enter your password"
+              isInvalid={passwordErr}
+              errorMessage="Please enter correct password"
+              isRequired
+              required
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setPasswordErr(false);
+              }}
               endContent={
                 <button
                   className="focus:outline-none"
@@ -85,7 +136,10 @@ const LoginPage = () => {
               </Link>
             </div>
 
-            <Button className="w-full bg-primary-600 text-white py-6 rounded-lg hover:bg-primary-700 transition-colors">
+            <Button
+              className="w-full bg-primary-600 text-white py-6 rounded-lg hover:bg-primary-700 transition-colors"
+              type="submit"
+            >
               Log in
             </Button>
           </form>
