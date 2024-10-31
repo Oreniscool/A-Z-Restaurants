@@ -14,7 +14,6 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState('home');
   useEffect(() => {
-    console.log(window.location.pathname.substring(11));
     setCurrentPage(window.location.pathname.substring(11));
   }, [navigate]);
   return (
@@ -67,7 +66,16 @@ const Sidebar = () => {
         >
           <Settings />
         </Button>
-        <Button isIconOnly radius="full" color="danger" variant="shadow">
+        <Button
+          isIconOnly
+          radius="full"
+          color="danger"
+          variant="shadow"
+          onClick={() => {
+            localStorage.removeItem('token', '');
+            navigate('/login');
+          }}
+        >
           <LogOut />
         </Button>
       </div>

@@ -1,12 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SelectLocation from './SelectLocation';
 import restaurants from '../assets/dinners';
 import Dinners from './Dinners';
 import RecentTranscations from './RecentTranscations';
 import { useOutletContext } from 'react-router-dom';
+import axios from 'axios';
 const Home = () => {
-  const [username, setUsername] = useState('Qitiya');
+  const [username, setUsername] = useState('');
   const [location, setLocation, handleChange] = useOutletContext();
+
+  useEffect(() => {
+    const getUsername = async () => {
+      try {
+        const response = await axios.get(
+          'http://localhost:5000/user/getUsername',
+          {
+            headers: {
+              'x-access-token': localStorage.getItem('token'),
+            },
+          }
+        );
+        if (response.status == 200) {
+          setUsername(response.data.username);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    getUsername();
+  }, []);
   return (
     <div className="bg-white w-full rounded-[2.5rem] flex flex-col p-10">
       <div className="w-full h-fit flex items-center justify-around">

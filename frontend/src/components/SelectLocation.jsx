@@ -3,7 +3,6 @@ import { Select, SelectItem } from '@nextui-org/react';
 import { MapPin } from 'lucide-react';
 import indianCities from '../assets/cities.js';
 const SelectLocation = ({ handleChange, location }) => {
-  console.log(location);
   return (
     <Select
       className="max-w-xs"

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input, Button, Checkbox } from '@nextui-org/react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -14,12 +14,17 @@ const LoginPage = () => {
   const [usernameErr, setUsernameErr] = useState(false);
   const [passwordErr, setPasswordErr] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
 
+    if (token) {
+      navigate('/dashboard/home');
+    }
+  }, [navigate]);
   const login = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      console.log(username, password);
       const response = await axios.post(
         'http://localhost:5000/login',
         {
@@ -30,13 +35,14 @@ const LoginPage = () => {
       );
       setLoading(false);
       if (response.status == 200) {
+        localStorage.setItem('token', response.data.token);
         navigate('/dashboard/home');
       }
     } catch (e) {
       setLoading(false);
-      if (e.status == 400) {
+      if (e.status == 401) {
         setUsernameErr(true);
-      } else if (e.status == 401) {
+      } else if (e.status == 402) {
         setPasswordErr(true);
       }
       console.error(e);
@@ -139,6 +145,7 @@ const LoginPage = () => {
             <Button
               className="w-full bg-primary-600 text-white py-6 rounded-lg hover:bg-primary-700 transition-colors"
               type="submit"
+              isLoading={loading}
             >
               Log in
             </Button>

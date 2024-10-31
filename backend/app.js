@@ -1,20 +1,16 @@
 import express from 'express';
-import mariadb from 'mariadb';
 import dotenv from 'dotenv';
+dotenv.config();
 import http from 'http';
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
-dotenv.config();
+import jwt from 'jsonwebtoken';
+import verifyJWT from './middleware/verifyJWT.js';
+import pool from './database/db.js';
+import userRoutes from './routes/userRoutes.js';
+//set up
 const app = express();
 app.use(express.json());
-const pool = mariadb.createPool({
-  host: process.env.HOST,
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
-  connectionLimit: 5,
-});
 
 app.use(
   cors({
@@ -24,37 +20,7 @@ app.use(
   })
 );
 
-//get all restaurants
-app.get('/restaurants', async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const rows = await conn.query('SELECT * from restaurant');
-    console.log(rows);
-    const jsonS = JSON.stringify(rows);
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(jsonS);
-  } catch (e) {
-    console.error(e);
-  }
-  conn.end();
-});
-
-//get all customers
-app.get('/customers', async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const rows = await conn.query('SELECT * from customer');
-    console.log(rows);
-    const jsonS = JSON.stringify(rows);
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(jsonS);
-  } catch (e) {
-    console.error(e);
-  }
-  conn.end();
-});
+app.use('/user', userRoutes);
 
 app.post('/login', async (req, res) => {
   let conn;
@@ -71,8 +37,8 @@ app.post('/login', async (req, res) => {
         [username]
       );
       console.log(row);
-      if (!row) {
-        conn.end();
+      conn.end();
+      if (row.length == 0) {
         return res.status(401).json({ message: 'Invalid username' });
       }
       const isPasswordValid = await bcrypt.compare(
@@ -81,11 +47,16 @@ app.post('/login', async (req, res) => {
       );
 
       if (!isPasswordValid) {
-        conn.end();
-        return res.status(401).json({ message: 'Invalid password' });
+        return res.status(402).json({ message: 'Invalid password' });
+      } else {
+        const id = row[0].c_id;
+        const token = jwt.sign({ id }, process.env.JWTSECRET, {
+          expiresIn: '15m',
+        });
+
+        return res.json({ auth: true, token: token, result: row });
       }
     } catch (e) {
-      conn.end();
       console.log(e);
       return res.status(500).json({ message: 'Internal server error' });
     }
@@ -93,8 +64,6 @@ app.post('/login', async (req, res) => {
     console.log(e);
     return res.status(500).json({ message: 'Internal server error' });
   }
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.end('worked');
 });
 
 app.post('/register', async (req, res) => {
