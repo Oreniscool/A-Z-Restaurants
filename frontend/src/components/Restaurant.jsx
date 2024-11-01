@@ -33,8 +33,8 @@ const Restaurant = ({ dinner }) => {
           </div>
         </div>
         <div className="flex gap-2">
-          {dinner.alcohol_availability ? <Beer size={20} /> : ''}
-          {dinner.birthday_party_packages ? <Cake size={20} /> : ''}
+          {dinner.alcohol_avail ? <Beer size={20} /> : ''}
+          {dinner.birthday_package ? <Cake size={20} /> : ''}
           {dinner.michelin_star ? <Star size={20} /> : ''}
         </div>
       </CardBody>

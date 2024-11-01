@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import verifyJWT from './middleware/verifyJWT.js';
 import pool from './database/db.js';
 import userRoutes from './routes/userRoutes.js';
+import restaurantRoutes from './routes/restaurantRoutes.js';
 //set up
 const app = express();
 app.use(express.json());
@@ -21,6 +22,7 @@ app.use(
 );
 
 app.use('/user', userRoutes);
+app.use('/restaurant', restaurantRoutes);
 
 app.post('/login', async (req, res) => {
   let conn;

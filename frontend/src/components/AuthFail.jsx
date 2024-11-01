@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
 const AuthFail = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    localStorage.removeItem('token');
+  }, []);
   return (
     <div className="bg-white w-[97%] rounded-[2.5rem] flex flex-col justify-center items-center p-10">
       <div className="flex flex-col items-center">
