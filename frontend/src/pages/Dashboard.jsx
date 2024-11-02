@@ -12,22 +12,23 @@ const Dashboard = () => {
     console.log(value.target.innerText);
     setLocation(value.target.innerText);
   };
-  const checkAuth = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/user/isAuth', {
-        headers: {
-          'x-access-token': localStorage.getItem('token'),
-        },
-      });
-      if (response.status == 200) {
-        setAuthenticated(true);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    setLoading(false);
-  };
+
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/user/isAuth', {
+          headers: {
+            'x-access-token': localStorage.getItem('token'),
+          },
+        });
+        if (response.status == 200 || response.status == 204) {
+          setAuthenticated(true);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      setLoading(false);
+    };
     checkAuth();
   }, []);
   return (

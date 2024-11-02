@@ -9,6 +9,7 @@ import Bookings from './components/Bookings';
 import Help from './components/Help';
 import Settings from './components/Settings';
 import RestaurantPage from './components/RestaurantPage';
+import BookingPage from './pages/BookingPage';
 function App() {
   return (
     <BrowserRouter>
@@ -27,6 +28,7 @@ function App() {
             path="restaurant/:id"
             element={<RestaurantPage></RestaurantPage>}
           ></Route>
+          <Route path="book/:id" element={<BookingPage></BookingPage>}></Route>
         </Route>
         <Route
           path="*"

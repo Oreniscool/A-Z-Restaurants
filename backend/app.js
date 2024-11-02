@@ -53,7 +53,7 @@ app.post('/login', async (req, res) => {
       } else {
         const id = row[0].c_id;
         const token = jwt.sign({ id }, process.env.JWTSECRET, {
-          expiresIn: '15m',
+          expiresIn: '24h',
         });
 
         return res.json({ auth: true, token: token, result: row });
