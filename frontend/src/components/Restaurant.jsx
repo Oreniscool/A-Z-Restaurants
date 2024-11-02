@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 import { Card, CardHeader, CardBody, Image } from '@nextui-org/react';
-import restaurant from '/background/restaurant.jpg';
 import { Beer, Cake, Star, Clock, Car } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getHours, format } from 'date-fns';
+import { format } from 'date-fns';
 import images from '../assets/images.js';
 const Restaurant = ({ dinner }) => {
   const navigate = useNavigate();

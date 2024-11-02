@@ -24,6 +24,12 @@ app.use(
 app.use('/user', userRoutes);
 app.use('/restaurant', restaurantRoutes);
 
+app.post('/reserve', verifyJWT, (req, res) => {
+  let conn;
+  console.log(req.body);
+  res.status(200).send('Reservation recieved');
+});
+
 app.post('/login', async (req, res) => {
   let conn;
   try {

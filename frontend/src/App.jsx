@@ -5,11 +5,11 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Home from './components/Home';
 import Search from './components/Search';
-import Bookings from './components/Bookings';
-import Help from './components/Help';
+import RecentBookings from './pages/RecentBookings';
 import Settings from './components/Settings';
 import RestaurantPage from './components/RestaurantPage';
 import BookingPage from './pages/BookingPage';
+import Help from './pages/Help';
 function App() {
   return (
     <BrowserRouter>
@@ -21,8 +21,11 @@ function App() {
         <Route path="/dashboard" element={<Dashboard></Dashboard>}>
           <Route path="home" element={<Home></Home>}></Route>
           <Route path="search" element={<Search></Search>}></Route>
-          <Route path="bookings" element={<Bookings></Bookings>}></Route>
-          <Route path=" help" element={<Help></Help>}></Route>
+          <Route
+            path="bookings"
+            element={<RecentBookings></RecentBookings>}
+          ></Route>
+          <Route path="help" element={<Help></Help>}></Route>
           <Route path="settings" element={<Settings></Settings>}></Route>
           <Route
             path="restaurant/:id"

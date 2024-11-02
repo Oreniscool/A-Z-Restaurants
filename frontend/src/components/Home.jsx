@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import SelectLocation from './SelectLocation';
-import restaurants from '../assets/dinners';
 import Dinners from './Dinners';
 import RecentTranscations from './RecentTranscations';
 import { useOutletContext } from 'react-router-dom';
