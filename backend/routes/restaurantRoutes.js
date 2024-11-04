@@ -91,4 +91,20 @@ app.get('/getById', async (req, res) => {
   }
 });
 
+app.get('/getFreeTables', async (req, res) => {
+  const r_id = req.headers['r_id'];
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = (
+      await conn.query('CALL GetFreeTables(?,?)', [res_date, r_id])
+    )[0];
+    res.status(200).json({ tables: rows });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    conn.end();
+  }
+});
+
 export default app;

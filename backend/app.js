@@ -24,10 +24,81 @@ app.use(
 app.use('/user', userRoutes);
 app.use('/restaurant', restaurantRoutes);
 
-app.post('/reserve', verifyJWT, (req, res) => {
+app.post('/reserve', verifyJWT, async (req, res) => {
   let conn;
+  const c_id = req.userId;
   console.log(req.body);
-  res.status(200).send('Reservation recieved');
+  const {
+    date,
+    time,
+    noOfGuests,
+    special,
+    tables,
+    type,
+    sepChecks,
+    waitstaff,
+    seating,
+    event,
+    r_id,
+  } = req.body;
+  try {
+    conn = await pool.getConnection();
+    const rows = (
+      await conn.query('CALL GetFreeTables(?,?)', [
+        `${date.year}-${date.month}-${date.day}`,
+        r_id,
+      ])
+    )[0];
+    console.log(tables, rows.length);
+    if (tables > rows.length) {
+      conn.end();
+      return res.status(400).send('Not enough tables in restaurant');
+    }
+    //Inserting into reservation
+    await conn.query(
+      'INSERT INTO reservation(res_date,res_time,num_of_guests,special_req) values(?,?,?,?)',
+      [
+        `${date.year}-${date.month}-${date.day}`,
+        `${time.hour}:${time.minute}`,
+        noOfGuests,
+        special,
+      ]
+    );
+    const res_id = (
+      await conn.query('SELECT MAX(res_id) AS res_id FROM reservation;')
+    )[0].res_id;
+
+    //Inserting into the subtypes of reservation
+    if (type == 'group') {
+      let group_discount = 10;
+      await conn.query(
+        'INSERT INTO group_res(res_id,separate_checks,special_event,group_discount) VALUES(?,?,?,?)',
+        [res_id, sepChecks ? 1 : 0, event, group_discount]
+      );
+    }
+    if (type == 'vip') {
+      await conn.query(
+        'INSERT INTO vip_res(res_id,preferred_waitstaff,seating_arrangement) VALUES(?,?,?)',
+        [res_id, waitstaff, seating]
+      );
+    }
+
+    //Updating table status
+    for (let i = 0; i < tables; i++) {
+      const table_id = rows[i].table_id;
+      //Inserting into books_a table
+      await conn.query(
+        'INSERT INTO books_a(c_id,r_id,res_id,t_id) VALUES(?,?,?,?)',
+        [c_id, r_id, res_id, table_id]
+      );
+    }
+    res.status(200).send('Reservation booked');
+  } catch (e) {
+    console.log(e);
+    res.status(500).send('Internal server error');
+  } finally {
+    conn.end();
+  }
 });
 
 app.post('/login', async (req, res) => {

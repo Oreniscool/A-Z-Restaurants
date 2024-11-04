@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   DatePicker,
   TimeInput,
@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { today, getLocalTimeZone } from '@internationalized/date';
 import axios from 'axios';
 const BookingPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [date, setDate] = useState(today(getLocalTimeZone()));
   const [time, setTime] = useState('');
@@ -24,7 +25,7 @@ const BookingPage = () => {
   const [seating, setSeating] = useState('none');
   const [event, setEvent] = useState('other');
   const [loading, setLoading] = useState(false);
-
+  const [tableError, setTableError] = useState(false);
   const items = [
     { key: 'group', label: 'group' },
     { key: 'vip', label: 'vip' },
@@ -69,9 +70,14 @@ const BookingPage = () => {
           },
         }
       );
-      console.log(response);
+      if (response.status == 200) {
+        console.log(response);
+        navigate('/dashboard/home');
+      }
     } catch (e) {
-      console.error(e);
+      if (e.status == 400) {
+        setTableError(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -123,8 +129,13 @@ const BookingPage = () => {
           label="Number of tables"
           type="number"
           min={1}
+          isInvalid={tableError}
+          errorMessage="Not enough free tables in the restaurant"
           value={tables}
           onValueChange={setTables}
+          onChange={() => {
+            setTableError(false);
+          }}
         ></Input>
         <Input
           variant="underlined"

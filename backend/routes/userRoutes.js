@@ -25,4 +25,21 @@ app.get('/getUsername', verifyJWT, async (req, res) => {
   conn.end();
 });
 
+app.get('/getReservation', verifyJWT, async (req, res) => {
+  const id = req.userId;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = (
+      await conn.query('CALL get_details_of_reservation_of_customer(?)', [id])
+    )[0];
+    console.log(rows);
+    res.status(200).json({ reservations: rows });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    conn.end();
+  }
+});
+
 export default app;

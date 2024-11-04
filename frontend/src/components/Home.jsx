@@ -41,6 +41,7 @@ const Home = () => {
         console.error(e);
       }
     };
+
     getUsername();
     getRestaurants();
   }, []);
